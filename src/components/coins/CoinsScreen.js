@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, ActivityIndicator, FlatList, Pressable, StyleSheet } from 'react-native'
 import Http from '../../libs/Http'
 import CoinsItem from './CoinsItem'
+import Colors from '../../res/colors'
 
 class CoinsScreen extends Component {
     state = {
@@ -31,7 +32,7 @@ class CoinsScreen extends Component {
                 { loading ? 
                     <ActivityIndicator
                         style={styles.loader}
-                        color='#000' 
+                        color='#fff' 
                         size="large" 
                     /> 
                     : null
@@ -50,7 +51,7 @@ class CoinsScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff"
+        backgroundColor: Colors.charade
     },
     titleText: {
         color: "#fff",
