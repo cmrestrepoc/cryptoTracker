@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
-import { View, Text, Pressable, StyleSheet } from 'react-native'
+import { View, ActivityIndicator, FlatList, Pressable, StyleSheet } from 'react-native'
 import Http from '../../libs/Http'
+import CoinsItem from './CoinsItem'
 
 class CoinsScreen extends Component {
-    
+    state = {
+        coins: [],
+        loading: false
+    }
+
     componentDidMount = async () => {
-        const coins = await Http.instance.get("https://api.coinlore.net/api/tickers/")
-        console.log("coins", coins)
+        this.setState({ loading: true })
+        const res = await Http.instance.get("https://api.coinlore.net/api/tickers/")
+        
+        this.setState({ 
+            coins: res.data, 
+            loading: false
+        })
     }
     
     handlePress = () => {
@@ -15,12 +25,23 @@ class CoinsScreen extends Component {
     }
 
     render() {
+        const { coins, loading } = this.state
         return (
             <View style={styles.container}>
-                <Text style={styles.titleText}>Coins Screen</Text>
-                <Pressable style={styles.btn} onPress={this.handlePress}>
-                    <Text style={styles.btnText}>Go to detail</Text>
-                </Pressable>
+                { loading ? 
+                    <ActivityIndicator
+                        style={styles.loader}
+                        color='#000' 
+                        size="large" 
+                    /> 
+                    : null
+                }
+                <FlatList 
+                    data={coins}
+                    renderItem={({item}) => (
+                        <CoinsItem item={item}/>
+                    )}
+                />
             </View>
         )
     }
@@ -29,7 +50,7 @@ class CoinsScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "red"
+        backgroundColor: "#fff"
     },
     titleText: {
         color: "#fff",
@@ -44,6 +65,9 @@ const styles = StyleSheet.create({
     btnText: {
         color: "#fff",
         textAlign: "center"
+    },
+    loader: {
+        marginTop: 60
     }
 })
 
