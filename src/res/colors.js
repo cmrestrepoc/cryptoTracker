@@ -1,4 +1,4 @@
-const colors = {
+const Colors = {
     blackPearl: "#20252c",
     charade: "#272c35",
     zircon: "#3a4049",
@@ -7,5 +7,4 @@ const colors = {
     white: "#fff"
   };
   
-  export default colors;
-  
+  export default Colors;

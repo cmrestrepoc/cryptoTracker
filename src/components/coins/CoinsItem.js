@@ -1,8 +1,8 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, Platform } from 'react-native'
-import Colors from '../../res/colors'
+import { View, Text, Image, StyleSheet, Platform, Pressable } from 'react-native'
+import Colors from '../../res/Colors'
 
-const CoinsItem = ({ item }) => {
+const CoinsItem = ({ item, onPress }) => {
     const getImageArrow = () => {
         if(item.percent_change_1h > 0) {
             return require("../../assets/arrow_up.png")
@@ -11,7 +11,7 @@ const CoinsItem = ({ item }) => {
     }
     
     return (
-        <View style={styles.container}>
+        <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.row}>
                 <Text style={styles.nameText}>
                     {item.name}
@@ -32,7 +32,7 @@ const CoinsItem = ({ item }) => {
                     style={styles.imgIcon}
                 />
             </View>
-        </View>
+        </Pressable>
     )
 }
 
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.zircon,
         borderBottomWidth: 1,
         marginLeft: Platform.OS === 'ios' ? 16 : 0,
-        marginRight: Platform.OS === 'ios' ? 16 : 0
+        paddingLeft: Platform.OS === 'ios' ? 0 : 16
     },
     row: {
         alignItems: "center",

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ActivityIndicator, FlatList, Pressable, StyleSheet } from 'react-native'
 import Http from '../../libs/Http'
 import CoinsItem from './CoinsItem'
-import Colors from '../../res/colors'
+import Colors from '../../res/Colors'
 
 class CoinsScreen extends Component {
     state = {
@@ -20,9 +20,8 @@ class CoinsScreen extends Component {
         })
     }
     
-    handlePress = () => {
-        console.log('Go to detail', this.props)
-        this.props.navigation.navigate('CoinDetail')
+    handlePress = (coin) => {
+        this.props.navigation.navigate('CoinDetail', { coin })
     }
 
     render() {
@@ -39,8 +38,11 @@ class CoinsScreen extends Component {
                 }
                 <FlatList 
                     data={coins}
-                    renderItem={({item}) => (
-                        <CoinsItem item={item}/>
+                    renderItem={({ item }) => (
+                        <CoinsItem 
+                            item={item} 
+                            onPress={() => this.handlePress(item)}
+                        />
                     )}
                 />
             </View>
