@@ -1,3 +1,10 @@
 # Windows files
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+charset = utf-8
+
 [*.bat]
 end_of_line = lf
