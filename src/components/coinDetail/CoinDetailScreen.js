@@ -78,6 +78,7 @@ class CoinDetailScreen extends Component {
         <FlatList
           style={styles.horizontalList}
           data={markets}
+          keyExtractor={(item, index) => index}
           renderItem={({ item }) => <CoinDetailMarketItem item={item} />}
           horizontal={true}
         />
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 16,
-    color: '#fff',
+    color: Colors.white,
     fontWeight: 'bold',
     marginLeft: 8,
   },
@@ -114,16 +115,16 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   itemText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 14,
   },
   sectionText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 14,
     fontWeight: 'bold',
   },
   marketTittle: {
-    color: '#fff',
+    color: Colors.white,
     marginBottom: 16,
     fontSize: 16,
     marginLeft: 16,
