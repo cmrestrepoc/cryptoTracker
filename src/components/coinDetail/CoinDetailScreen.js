@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { View, Image, StyleSheet, SectionList, FlatList, Text } from 'react-native'
+import { View, Image, StyleSheet, SectionList, FlatList, Text, Pressable, Alert } from 'react-native'
 import Http from '../../libs/Http'
 import Colors from '../../res/Colors'
 import CoinDetailMarketItem from './CoinMarketItem'
+import Storage from '../../libs/storage'
 
 class CoinDetailScreen extends Component {
   state = {
     coin: {},
     markets: [],
+    isFavorite: false,
   }
 
   getSymbolIcon = name => {
@@ -42,20 +44,75 @@ class CoinDetailScreen extends Component {
     this.setState({ markets })
   }
 
+  toogleFavorite = () => {
+    const key = `favorite-${this.state.coin.id}`
+    if (this.state.isFavorite) {
+      this.removeFavorite(key)
+    } else {
+      this.addFavorite(key)
+    }
+  }
+
+  addFavorite = async key => {
+    const coin = JSON.stringify(this.state.coin)
+
+    await Storage.instance.store(key, coin)
+    const getStored = await Storage.instance.get(key)
+
+    if (getStored) {
+      this.setState({ isFavorite: true })
+    }
+  }
+
+  removeFavorite = key => {
+    Alert.alert('Remove favorite', 'Are you sure?', [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Remove',
+        onPress: async () => {
+          await Storage.instance.remove(key)
+          this.setState({ isFavorite: false })
+        },
+        style: 'destructive',
+      },
+    ])
+  }
+
+  getFavorite = async () => {
+    try {
+      const key = `favorite-${this.state.coin.id}`
+      const favStr = await Storage.instance.get(key)
+      favStr && this.setState({ isFavorite: true })
+    } catch (error) {
+      console.log('error pulling from asyncStorage', error)
+    }
+  }
+
   componentDidMount = () => {
     const { coin } = this.props.route.params
     this.props.navigation.setOptions({ title: coin.symbol })
     this.getMarkets(coin.id)
-    this.setState({ coin })
+    this.setState({ coin }, () => this.getFavorite())
   }
 
   render() {
-    const { coin, markets } = this.state
+    const { coin, markets, isFavorite } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.subHeader}>
-          <Image style={styles.iconImage} source={{ uri: this.getSymbolIcon(coin.name) }} />
-          <Text style={styles.titleText}>{coin.name}</Text>
+          <View style={styles.row}>
+            <Image style={styles.iconImage} source={{ uri: this.getSymbolIcon(coin.name) }} />
+            <Text style={styles.titleText}>{coin.name}</Text>
+          </View>
+          <Pressable
+            onPress={this.toogleFavorite}
+            style={[styles.btnFavorite, isFavorite ? styles.btnFavoriteRemove : styles.btnFavoriteAdd]}>
+            <Text style={styles.btnFavoriteText}>{isFavorite ? 'Remove favorite' : 'Add Favorite'}</Text>
+          </Pressable>
         </View>
 
         <SectionList
@@ -100,6 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.1)',
     padding: 16,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   titleText: {
     fontSize: 16,
@@ -136,6 +194,19 @@ const styles = StyleSheet.create({
   horizontalList: {
     maxHeight: 100,
     paddingLeft: 16,
+  },
+  btnFavorite: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  btnFavoriteText: {
+    color: Colors.white,
+  },
+  btnFavoriteAdd: {
+    backgroundColor: Colors.picton,
+  },
+  btnFavoriteRemove: {
+    backgroundColor: Colors.carmine,
   },
 })
 
