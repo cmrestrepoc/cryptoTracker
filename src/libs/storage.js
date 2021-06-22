@@ -32,7 +32,7 @@ class Storage {
 
   getAllkeys = async () => {
     try {
-      return await AsyncStorage.getAllkeys()
+      return await AsyncStorage.getAllKeys()
     } catch (err) {
       console.log('Storage getAllkeys error', err)
       throw Error(err)
